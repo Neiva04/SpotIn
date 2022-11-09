@@ -1,3 +1,33 @@
+--Criacao do Log
+/*tabela log serve para acompanhar as alteracoes ou mudancas feitas
+pela equipe durante a realizacao do trabalho*/
+
+create table tb_log
+(
+ id_log  int         not null,
+ usuario VARCHAR(50) NOT NULL,
+ DATA    DATE        NOT NULL,
+ operacao VARCHAR(50) NOT NULL
+ );
+
+ALTER TABLE tb_log ADD CONSTRAINT pk_log PRIMARY KEY (id_log);
+
+create SEQUENCE sq_Log;
+
+--trigger para povoar a tabela log a cada alteracao no schema
+
+create or replace TRIGGER TR_REGISTRO_DDL
+AFTER DDL
+ON SCHEMA
+DECLARE vOPERACAO VARCHAR2(50);
+BEGIN
+    voperacao := 'DDL - '|| ORA_SYSEVENT ||
+                      ' '|| ORA_DICT_OBJ_TYPE || 
+                      ' '|| ORA_DICT_OBJ_NAME;
+    INSERT INTO TB_LOG VALUES(SQ_LOG.NEXTVAL, USER, SYSDATE, vOperacao);
+END;
+
+
 -- Criação das tabelas
 
 create table tb_usuario
@@ -183,7 +213,7 @@ alter table tb_cartao add constraint pk_cartao primary key (ID_cartao);
 alter table tb_vagas add constraint ck_estado CHECK (estado in ('O','L'));
 /*'O' = Ocupado. 'L' = Livre */
 
-  --alter session set nls_date_format='dd/mm/yyyy';
+alter session set nls_date_format='dd/mm/yyyy';
 
 
 -- Criação das restrições de Chave Estrangeira
@@ -225,5 +255,23 @@ alter table tb_cidade add constraint fk_cidade_bairro foreign key (ID_bairro) re
 alter table tb_estado add constraint fk_estado_cidade foreign key (ID_cidade) references tb_cidade(ID_cidade);
 
 
+--Criacao de Sequencias
 
-
+create sequence sq_usuario;
+create sequence sq_telefone;
+create sequence sq_marca;
+create sequence sq_modelo;
+create sequence sq_veiculo;
+create sequence sq_bairro;
+create sequence sq_cidade;
+create sequence sq_estado;
+create sequence sq_shopping;
+create sequence sq_endereco;
+create sequence sq_regiao;
+create sequence sq_setor;
+create sequence sq_vagas;
+create sequence sq_estadia;
+create sequence sq_estacionamento;
+create sequence sq_cartao;
+create sequence sq_pagamento;
+create sequence sq_preco;
